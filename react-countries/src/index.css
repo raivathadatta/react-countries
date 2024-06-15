@@ -4,6 +4,7 @@
 
 select{
     width: 13%;
+    outline: none;
 }
 input{
 width: 20%;

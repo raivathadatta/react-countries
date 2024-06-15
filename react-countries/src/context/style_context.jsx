@@ -10,10 +10,12 @@ let StyleStateContext = (props) => {
     let [filterListData, setFilterData] = useState([])//filter list
 
     let [region, setRegion] = useState({})//region list
-   
+
     let [subRegion, setSubRegion] = useState([])//subregion list
     let regionList = Object.keys(region)
-    let [subRegionData ,setSubRegionData]= useState([])//subregion
+    let [subRegionData, setSubRegionData] = useState([])//subregion
+
+
 
     useEffect(() => {
 
@@ -75,46 +77,76 @@ let StyleStateContext = (props) => {
 
 
 
-    function searchBySection() {
+    let searchBySection = () => {
         console.log("seach by section")
-        let regionCountries = []
+        let regionCountries = JSON.parse(JSON.stringify(countriesList))
         let selectedRegion = document.getElementById("region").value
         if (selectedRegion.toLowerCase() == 'all') {
-            filterListData = JSON.parse(JSON.stringify(countriesList))
-            setFilterData(filterListData)
+            setFilterData(regionCountries)
             return
         }
-        regionCountries = countriesList.filter((country) => {
+        regionCountries = regionCountries.filter((country) => {
             return country.region.toLowerCase() == selectedRegion.toLowerCase()
         })
-        // subRegionData =filterListData
-        filterListData = regionCountries
         setSubRegion([...region[selectedRegion]])///adding sub region by data 
         setFilterData(filterListData)/// adding filter data 
+        setSubRegionData(regionCountries)
 
-        setSubRegionData(filterListData)
     }
 
-    function searchByInputValue(event) {
+    let searchByInputValue = (event) => {
+        let copyOfCountryList = JSON.parse(JSON.stringify(countriesList))
         let selectedRegion = document.getElementById("region").value
-        let regionCountries = selectedRegion.toLowerCase() == 'filterbyregion' ? countriesList : selectedRegion.toLowerCase() == 'all' ? countriesList : countriesList.filter((country) => country.region.toLowerCase() == selectedRegion.toLowerCase())
+        let regionCountries = selectedRegion.toLowerCase() == 'filterbyregion' ? copyOfCountryList : selectedRegion.toLowerCase() == 'all' ? copyOfCountryList : copyOfCountryList.filter((country) => country.region.toLowerCase() == selectedRegion.toLowerCase())
         let inputValue = event.target.value
         let inputCountries = regionCountries.filter((country) => country.name.common.toLowerCase().includes(inputValue.toLowerCase()))
-        filterListData = JSON.parse(JSON.stringify(inputCountries))
-        setFilterData(filterListData)
+        setFilterData(inputCountries)
     }
 
 
     let filterBySubregion = (event) => {
-        console.log(subRegionData,"sbsbsbsbsbsb",filterListData)
-        console.log(event.target.value,"//////////////////")
-        let subRegionCounties = subRegionData.filter((country) => country.subregion.toLowerCase() == event.target.value.toLowerCase())
+        let copyOfFilterData = JSON.parse(JSON.stringify(subRegionData))
+        let subRegionCounties = copyOfFilterData.filter((country) => country.subregion.toLowerCase() == event.target.value.toLowerCase())
         setFilterData(subRegionCounties)
     }
 
+    let sortByPopulation = (event) => {
+        console.log("on sortByPopulation")
+        let copyOfFilterData = JSON.parse(JSON.stringify(filterListData))
+
+        if (event.target.value.toLowerCase() == "sortpopulationbyassending") {
+            console.log("sortpopulationbyassending")
+            let sortedData = copyOfFilterData.sort((country1, country2) => {
+                console.log(country2.population - country1.population)
+                return country2.population - country1.population
+            })
+            setFilterData(sortedData)
+        } else {
+            console.log("sortpopulationbydessending")
+            let sortedData = copyOfFilterData.sort((country1, country2) => {
+                return country1.population - country2.population
+            })
+            console.log(filterListData.sort((country1, country2) => country1.population - country2.population))
+            setFilterData(sortedData)
+        }
+    }
+
+    let sortByArea = (event) => {
+        let copyFilterData = JSON.parse(JSON.stringify(filterListData))
+        let sortedData = []
+        if (event.target.value == 'sortByAreaAsd') {
+            sortedData = copyFilterData.sort((country1, country2) =>
+                country2.area - country1.area)       
+        }
+        else{
+            sortedData = copyFilterData.sort((country1, country2) =>
+                country1.area - country2.area)
+        }
+        setFilterData(sortedData)
+    }
     console.log(props, "props")
     return (
-        <StyleContext.Provider value={{ style, updateStyle, regionList, filterListData, searchBySection, searchByInputValue, filterBySubregion, subRegion }}>
+        <StyleContext.Provider value={{ style, updateStyle, regionList, filterListData, searchBySection, searchByInputValue, filterBySubregion, subRegion, sortByPopulation,sortByArea }}>
 
             {props.children}
         </StyleContext.Provider>
