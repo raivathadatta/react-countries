@@ -1,4 +1,4 @@
 
 import { createContext } from "react";
- const styleContext = createContext();
+let styleContext = createContext();
  export default styleContext

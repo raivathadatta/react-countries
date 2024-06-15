@@ -5,12 +5,15 @@ import { useContext } from "react";
 
 
 
-function CountrySection({ data }) {
-    let { style } = useContext(styleContext)
+function CountrySection() {
+    // console.log(data)
+    // console.log('here', filterListData.length);
+    let { style,filterListData } = useContext(styleContext)
     let countryCardStyle = style.backGroundStyle
+    console.log(filterListData[0], "filterListData.length")
     return <div className={countryCardStyle.CountrySectionStyle} >
         {
-            data.map((country) => (
+            filterListData.map((country) => (
                 <div key={country.name.common} className={countryCardStyle.countryCardStyle} id='card-container' >
                     <img src={country.flags.png} alt={country.name.common} className="rounded-xl"/>
 

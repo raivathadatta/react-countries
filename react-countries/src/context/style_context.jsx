@@ -1,13 +1,46 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import StyleContext from "./styleContext";
 // import CountrySection from "../components/countries_section";
 
-const StyleStateContext = (props) => {
+
+let StyleStateContext = (props) => {
+
+    let [countriesList, setCountriesList] = useState([])//country list 
+
+    let [filterListData, setFilterData] = useState([])//filter list
+
+    let [region, setRegion] = useState({})//region list
+   
+    let [subRegion, setSubRegion] = useState([])//subregion list
+    let regionList = Object.keys(region)
+    let [subRegionData ,setSubRegionData]= useState([])//subregion
+
+    useEffect(() => {
+
+        let fetchData = async () => {
+            let regionData = {}
+            let result = await fetch("https://restcountries.com/v3.1/all")
+            let data = await result.json()
+            data.forEach(country => {
+                if (!regionData[country.region]) {
+                    regionData[country.region] = new Set()
+                }
+                regionData[country.region].add(country.subregion)
+
+            });
+            setRegion(regionData)
+            setFilterData(data)
+            setCountriesList(data)
+        }
+        fetchData()
+    }, [])
+
+
     let lightModeStyle = {
         bodyStyle: 'bg-white text-black',
         headerBackgroundStyle: 'flex flex-row justify-between p-[1%] bg-[#FFFFFF]',
         headerStyle: "flex flex-row justify-between shadow-md p-[1%] bg-[#FFFFFF]",
-        filterStyle: "bg-gray-100 text-blackshadow-md outline-none p-[1%] w-[25%]",
+        filterStyle: "bg-gray-100 text-blackshadow-md outline-none p-[1%] ",
         countryCardStyle: 'w-[22%] m-4 shadow-md rounded-xl bg-white ',
         CountrySectionStyle: "flex flex-wrap justify-between bg-white text-black"
     }
@@ -16,37 +49,73 @@ const StyleStateContext = (props) => {
         headerBackgroundStyle: 'flex flex-row justify-between p-[1%] bg-black',
         headerStyle: "flex flex-row justify-between shadow-md p-[1%] bg-black text-white",
         countryCardStyle: 'w-[22%] m-4 box-shadow-white shadow-md rounded-xl bg-gray-400 ',
-        filterStyle: "bg-gray-300 text-black boder-white p-[1%] w-[25%]",
+        filterStyle: "bg-gray-300 text-black boder-white p-[1%] ",
         CountrySectionStyle: "flex flex-wrap justify-between bg-black text-black"
     }
     // let [style, setStyle] = useState(lightModeStyle)
-    let [style, setDark] = useState({isDarkMode: false,backGroundStyle:lightModeStyle})
+    let [style, setDark] = useState({ isDarkMode: false, backGroundStyle: lightModeStyle })
 
     let updateStyle = () => {
 
         console.log('style.isDarkMode', "updateStyle", "////////////////////////////")
-        console.log("")
-        // setDark(!isDark)
-       
-        // darkMode?  setDark({darkMode,darkModeStyle}): setDark({darkMode,lightModeStyle})
         if (style.isDarkMode) {
             console.log('lightModeStyle changed')
             let darkMode = !style.isDarkMode
-            setDark({isDarkMode:darkMode,backGroundStyle:{...lightModeStyle}})
+            setDark({ isDarkMode: darkMode, backGroundStyle: { ...lightModeStyle } })
         } else {
             console.log('darkModeStyle changed')
             let darkMode = !style.isDarkMode
-            setDark({isDarkMode:darkMode,backGroundStyle:{...darkModeStyle}})
-            console.log(style,"ssssss")
-           
+            setDark({ isDarkMode: darkMode, backGroundStyle: { ...darkModeStyle } })
+            console.log(style, "ssssss")
+
         }
 
     }
 
 
+
+
+    function searchBySection() {
+        console.log("seach by section")
+        let regionCountries = []
+        let selectedRegion = document.getElementById("region").value
+        if (selectedRegion.toLowerCase() == 'all') {
+            filterListData = JSON.parse(JSON.stringify(countriesList))
+            setFilterData(filterListData)
+            return
+        }
+        regionCountries = countriesList.filter((country) => {
+            return country.region.toLowerCase() == selectedRegion.toLowerCase()
+        })
+        // subRegionData =filterListData
+        filterListData = regionCountries
+        setSubRegion([...region[selectedRegion]])///adding sub region by data 
+        setFilterData(filterListData)/// adding filter data 
+
+        setSubRegionData(filterListData)
+    }
+
+    function searchByInputValue(event) {
+        let selectedRegion = document.getElementById("region").value
+        let regionCountries = selectedRegion.toLowerCase() == 'filterbyregion' ? countriesList : selectedRegion.toLowerCase() == 'all' ? countriesList : countriesList.filter((country) => country.region.toLowerCase() == selectedRegion.toLowerCase())
+        let inputValue = event.target.value
+        let inputCountries = regionCountries.filter((country) => country.name.common.toLowerCase().includes(inputValue.toLowerCase()))
+        filterListData = JSON.parse(JSON.stringify(inputCountries))
+        setFilterData(filterListData)
+    }
+
+
+    let filterBySubregion = (event) => {
+        console.log(subRegionData,"sbsbsbsbsbsb",filterListData)
+        console.log(event.target.value,"//////////////////")
+        let subRegionCounties = subRegionData.filter((country) => country.subregion.toLowerCase() == event.target.value.toLowerCase())
+        setFilterData(subRegionCounties)
+    }
+
     console.log(props, "props")
     return (
-        <StyleContext.Provider value={{ style, updateStyle }}>
+        <StyleContext.Provider value={{ style, updateStyle, regionList, filterListData, searchBySection, searchByInputValue, filterBySubregion, subRegion }}>
+
             {props.children}
         </StyleContext.Provider>
     )

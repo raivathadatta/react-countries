@@ -4,68 +4,73 @@ import SearchBar from "./components/searchbar"
 import CountrySection from "./components/countries_section"
 import StyleStateContext from "./context/style_context"
 
-import { useState, useEffect, } from 'react'
+// import { useState, useEffect, } from 'react'
 
-// let  UserContext = createContext(style);
+
+
 
 function App() {
-  let [isDarkMode, setIsDarkMode] = useState(false)
-  let [region, setRegion] = useState([])
-  let [data, setData] = useState([])
-  let [regionData, setRegionData] = useState([])
-  let [countriesList, setCountriesList] = useState([])
+
+  // let [countriesList, setCountriesList] = useState([])//country list 
 
 
+  // let filterListData= JSON.parse(JSON.stringify(countriesList))
 
-  useEffect(() => {
-    let fetchData = async () => {
-      let regionData = new Set()
-      let result = await fetch("https://restcountries.com/v3.1/all")
-      let data = await result.json()
-      data.forEach(country => {
-        regionData.add(country.region)
-      });
-      setRegion([...regionData])
-      setRegionData(data)
-      setCountriesList(data)
-      setData(data)
-    }
-    fetchData()
+  // let [region, setRegion] = useState([])///region data
 
-  }, [])
+  // useEffect(() => {
+
+  //   let fetchData = async () => {
+  //     let regionData = new Set()
+  //     let result = await fetch("https://restcountries.com/v3.1/all")
+  //     let data = await result.json()
+  //     data.forEach(country => {
+  //       regionData.add(country.region)
+  //     });
+
+  //     // console.log('data fetch comleted')
+  //     setRegion([...regionData])
+  //     setCountriesList(data)
+  //     // setFilterData(data)
+  //   }
+  //   fetchData()
+  // }, [])
+
+ 
+  // function searchBySection() {
+  //   let selectedRegion = document.getElementById("region").value
+  //   // console.log("search by region",selectedRegion)
+  //   if (selectedRegion.toLowerCase() == 'all') {
+  //     filterListData = JSON.parse(JSON.stringify(countriesList))
+  //     return
+  //   }
+  //   let regionCountries = filterListData.filter((country) => country.region.toLowerCase() == selectedRegion.toLowerCase())
+  //   // console.log(regionCountries, selectedRegion, selectedRegion, "at filter by selection list")
+  //   filterListData = regionCountries
+  //   // console.log(filterListData, selectedRegion, selectedRegion, "at filter by")
 
 
-  function searchBySection(event) {
-    if (event.target.value.toLowerCase() == 'all') {
-      setData(countriesList)
-      return
-    }
+  // }
+  // function searchByInputValue(event) {
+    
+  //   let selectedRegion = document.getElementById("region").value
+  //   let regionCountries = selectedRegion.toLowerCase() == 'filterbyregion'? countriesList :  countriesList.filter((country) => country.region.toLowerCase() == selectedRegion.toLowerCase())
+  //   let inputValue = event.target.value
+  //   let inputCountries = regionCountries.filter((country) => country.name.common.toLowerCase().includes(inputValue.toLowerCase()))
+  //   filterListData = JSON.parse(JSON.stringify(inputCountries))
+ 
 
-    console.log(countriesList)
-    let region = event.target.value
-    let regionCountries = countriesList.filter((country) => country.region.toLowerCase() == region.toLowerCase())
-    console.log(regionCountries)
-    data = regionCountries
-    setRegionData(regionCountries)
-    setData(data)
-  }
-  function searchByInputValue(event) {
-    let inputValue = event.target.value
-    console.log(inputValue)
-    let inputCountries = regionData.filter((country) => country.name.common.toLowerCase().includes(inputValue.toLowerCase()))
-    data = inputCountries
-    setData(data)
-  }
+  // }
 
 
 
   return (
     <>
-
       <StyleStateContext>
         <NavBar ></NavBar>
-        <SearchBar inputSearch={searchByInputValue} sectionChange={searchBySection} regionData={region}></SearchBar>
-        <CountrySection data={data}  ></CountrySection>
+        <SearchBar inputSearch={()=>{}} sectionChange={()=>{}} regionData={''}></SearchBar>
+        {/* {console.log(filterListData.length,"listData")} */}
+        <CountrySection  ></CountrySection>
       </StyleStateContext>
     </>
   )

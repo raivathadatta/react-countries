@@ -1,9 +1,9 @@
 
 import { useContext } from "react";
 
-import styleContext from "../context/styleContext";
+import StyleContext from "../context/styleContext";
 function NavBar() {
-    let { style, updateStyle } = useContext(styleContext)
+    let { style, updateStyle } = useContext(StyleContext)
     let navBarStyle = style.backGroundStyle
     return (
         <header className={navBarStyle.headerStyle}>
