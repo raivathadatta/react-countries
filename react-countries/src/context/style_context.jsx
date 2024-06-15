@@ -79,17 +79,19 @@ let StyleStateContext = (props) => {
 
     let searchBySection = () => {
         console.log("seach by section")
-        let regionCountries = JSON.parse(JSON.stringify(countriesList))
+        
         let selectedRegion = document.getElementById("region").value
         if (selectedRegion.toLowerCase() == 'all') {
+            let regionCountries = JSON.parse(JSON.stringify(countriesList))
             setFilterData(regionCountries)
             return
         }
+        let regionCountries = JSON.parse(JSON.stringify(countriesList))
         regionCountries = regionCountries.filter((country) => {
             return country.region.toLowerCase() == selectedRegion.toLowerCase()
         })
         setSubRegion([...region[selectedRegion]])///adding sub region by data 
-        setFilterData(filterListData)/// adding filter data 
+        setFilterData(regionCountries)/// adding filter data 
         setSubRegionData(regionCountries)
 
     }
@@ -146,7 +148,7 @@ let StyleStateContext = (props) => {
     }
     console.log(props, "props")
     return (
-        <StyleContext.Provider value={{ style, updateStyle, regionList, filterListData, searchBySection, searchByInputValue, filterBySubregion, subRegion, sortByPopulation,sortByArea }}>
+        <StyleContext.Provider value={{ style, updateStyle, regionList, filterListData, searchBySection, searchByInputValue, filterBySubregion, subRegion, sortByPopulation }}>
 
             {props.children}
         </StyleContext.Provider>
