@@ -31,7 +31,7 @@ function SearchBar() {
                 <option value="sortpopulationbydessending" >Sort Population Decending</option>
             </select>
 
-            <select className={style.filterStyle} onChange={sortByPopulation}>
+            <select className={style.filterStyle} onChange={sortByArea}>
                 <option value="sortbyArea"  hidden>Filter By Area</option>
                 <option value="sortByAreaAsd" >Sort Area Asd</option>
                 <option value="sortByAreaDes" >Sort Area Decending</option>

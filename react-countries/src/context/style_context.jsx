@@ -79,7 +79,7 @@ let StyleStateContext = (props) => {
 
     let searchBySection = () => {
         console.log("seach by section")
-        
+
         let selectedRegion = document.getElementById("region").value
         if (selectedRegion.toLowerCase() == 'all') {
             let regionCountries = JSON.parse(JSON.stringify(countriesList))
@@ -120,13 +120,13 @@ let StyleStateContext = (props) => {
             console.log("sortpopulationbyassending")
             let sortedData = copyOfFilterData.sort((country1, country2) => {
                 console.log(country2.population - country1.population)
-                return country2.population - country1.population
+                return country1.population - country2.population
             })
             setFilterData(sortedData)
         } else {
             console.log("sortpopulationbydessending")
             let sortedData = copyOfFilterData.sort((country1, country2) => {
-                return country1.population - country2.population
+                return country2.population - country1.population
             })
             console.log(filterListData.sort((country1, country2) => country1.population - country2.population))
             setFilterData(sortedData)
@@ -134,21 +134,25 @@ let StyleStateContext = (props) => {
     }
 
     let sortByArea = (event) => {
-        let copyFilterData = JSON.parse(JSON.stringify(filterListData))
-        let sortedData = []
+
+        console.log(event.target.value)
         if (event.target.value == 'sortByAreaAsd') {
-            sortedData = copyFilterData.sort((country1, country2) =>
-                country2.area - country1.area)       
-        }
-        else{
-            sortedData = copyFilterData.sort((country1, country2) =>
+            let copyFilterData = JSON.parse(JSON.stringify(filterListData))
+            let sortedData = copyFilterData.sort((country1, country2) =>
                 country1.area - country2.area)
+            setFilterData(sortedData)
         }
-        setFilterData(sortedData)
+        else {
+            let copyFilterData = JSON.parse(JSON.stringify(filterListData))
+            let sortedData = copyFilterData.sort((country1, country2) =>
+                country2.area - country1.area)
+            setFilterData(sortedData)
+        }
+
     }
     console.log(props, "props")
     return (
-        <StyleContext.Provider value={{ style, updateStyle, regionList, filterListData, searchBySection, searchByInputValue, filterBySubregion, subRegion, sortByPopulation }}>
+        <StyleContext.Provider value={{ style, updateStyle, regionList, filterListData, searchBySection, searchByInputValue, filterBySubregion, subRegion, sortByPopulation, sortByArea }}>
 
             {props.children}
         </StyleContext.Provider>
