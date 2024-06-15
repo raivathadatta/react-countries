@@ -21,8 +21,7 @@ let darkModeStyle = {
 
 
 let MainStateContext = (props) => {
-
-    
+  
 
     let [countriesList, setCountriesList] = useState([])//country list 
 
@@ -57,7 +56,8 @@ let MainStateContext = (props) => {
     }, [])
 
     let [style, setDark] = useState({ isDarkMode: false, backGroundStyle: lightModeStyle })
-
+    
+    let modeText = style.isDarkMode ?"light Mode":"Dark Mode"
     let updateStyle = () => {
 
         if (style.isDarkMode) {
@@ -139,7 +139,7 @@ let MainStateContext = (props) => {
     }
     console.log(props, "props")
     return (
-        <MainContext.Provider value={{ style, updateStyle, regionList, filterListData, searchBySection, searchByInputValue, filterBySubregion, subRegion, sortByPopulation, sortByArea }}>
+        <MainContext.Provider value={{ style, updateStyle, modeText,regionList, filterListData, searchBySection, searchByInputValue, filterBySubregion, subRegion, sortByPopulation, sortByArea }}>
 
             {countriesList.length ==0 ? <div id="loader"></div> : props.children}
         </MainContext.Provider>
