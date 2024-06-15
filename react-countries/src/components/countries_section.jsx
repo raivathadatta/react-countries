@@ -1,14 +1,13 @@
 // import fetchData from './data.jsx'
 
-import styleContext from "../context/styleContext";
+import contextmian from "../context/context-main";
 import { useContext } from "react";
 
 
 
 function CountrySection() {
-    // console.log(data)
-    // console.log('here', filterListData.length);
-    let { style,filterListData } = useContext(styleContext)
+
+    let { style,filterListData } = useContext(contextmian)
     let countryCardStyle = style.backGroundStyle
     console.log(filterListData[0], "filterListData.length")
     return <div className={countryCardStyle.CountrySectionStyle} >

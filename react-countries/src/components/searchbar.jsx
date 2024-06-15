@@ -1,8 +1,8 @@
-import styleContext from "../context/styleContext";
+import contextmian from "../context/context-main";
 import { useContext } from "react";
 
 function SearchBar() {
-    let {style,searchBySection,regionList,searchByInputValue,subRegion,filterBySubregion,sortByPopulation,sortByArea} = useContext(styleContext)
+    let {style,searchBySection,regionList,searchByInputValue,subRegion,filterBySubregion,sortByPopulation,sortByArea} = useContext(contextmian)
     let searchStyle = style.backGroundStyle
   
 
@@ -12,7 +12,6 @@ function SearchBar() {
             <input type="text" onKeyUp={searchByInputValue} className={searchStyle.filterStyle}   placeholder= "Search for country .."/>
             <select name="search"  onChange={searchBySection} className={searchStyle.filterStyle} id = "region">
                 <option hidden value="filterbyregion" >Filter by region</option>
-                <option  value="all" >All</option>
                 {regionList.map((value)=>
                      <option key={value} value={value}>{value}</option>
                 )}

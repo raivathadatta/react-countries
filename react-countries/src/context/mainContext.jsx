@@ -1,9 +1,26 @@
 import { useState, useEffect } from "react";
-import StyleContext from "./styleContext";
-// import CountrySection from "../components/countries_section";
+import MainContext from "./context-main";
+
+let lightModeStyle = {
+    bodyStyle: 'bg-white text-black',
+    headerBackgroundStyle: 'flex flex-row justify-between p-[1%] bg-[#FFFFFF]',
+    headerStyle: "flex flex-row justify-between shadow-md p-[1%] bg-[#FFFFFF]",
+    filterStyle: "bg-gray-100 text-blackshadow-md outline-none p-[1%] ",
+    countryCardStyle: 'w-[22%] m-4 shadow-md rounded-xl bg-white ',
+    CountrySectionStyle: "flex flex-wrap justify-between bg-white text-black"
+}
+
+let darkModeStyle = {
+    bodyStyle: 'bg-black',
+    headerBackgroundStyle: 'flex flex-row justify-between p-[1%] bg-black',
+    headerStyle: "flex flex-row justify-between shadow-md p-[1%] bg-black text-white",
+    countryCardStyle: 'w-[22%] m-4 box-shadow-white shadow-md rounded-xl bg-gray-400 ',
+    filterStyle: "bg-gray-300 text-black boder-white p-[1%] ",
+    CountrySectionStyle: "flex flex-wrap justify-between bg-black text-black"
+}
 
 
-let StyleStateContext = (props) => {
+let MainStateContext = (props) => {
 
     let [countriesList, setCountriesList] = useState([])//country list 
 
@@ -37,38 +54,16 @@ let StyleStateContext = (props) => {
         fetchData()
     }, [])
 
-
-    let lightModeStyle = {
-        bodyStyle: 'bg-white text-black',
-        headerBackgroundStyle: 'flex flex-row justify-between p-[1%] bg-[#FFFFFF]',
-        headerStyle: "flex flex-row justify-between shadow-md p-[1%] bg-[#FFFFFF]",
-        filterStyle: "bg-gray-100 text-blackshadow-md outline-none p-[1%] ",
-        countryCardStyle: 'w-[22%] m-4 shadow-md rounded-xl bg-white ',
-        CountrySectionStyle: "flex flex-wrap justify-between bg-white text-black"
-    }
-    let darkModeStyle = {
-        bodyStyle: 'bg-black',
-        headerBackgroundStyle: 'flex flex-row justify-between p-[1%] bg-black',
-        headerStyle: "flex flex-row justify-between shadow-md p-[1%] bg-black text-white",
-        countryCardStyle: 'w-[22%] m-4 box-shadow-white shadow-md rounded-xl bg-gray-400 ',
-        filterStyle: "bg-gray-300 text-black boder-white p-[1%] ",
-        CountrySectionStyle: "flex flex-wrap justify-between bg-black text-black"
-    }
-    // let [style, setStyle] = useState(lightModeStyle)
     let [style, setDark] = useState({ isDarkMode: false, backGroundStyle: lightModeStyle })
 
     let updateStyle = () => {
 
-        console.log('style.isDarkMode', "updateStyle", "////////////////////////////")
         if (style.isDarkMode) {
-            console.log('lightModeStyle changed')
-            let darkMode = !style.isDarkMode
+             let darkMode = !style.isDarkMode
             setDark({ isDarkMode: darkMode, backGroundStyle: { ...lightModeStyle } })
         } else {
-            console.log('darkModeStyle changed')
-            let darkMode = !style.isDarkMode
+             let darkMode = !style.isDarkMode
             setDark({ isDarkMode: darkMode, backGroundStyle: { ...darkModeStyle } })
-            console.log(style, "ssssss")
 
         }
 
@@ -78,14 +73,7 @@ let StyleStateContext = (props) => {
 
 
     let searchBySection = () => {
-        console.log("seach by section")
-
         let selectedRegion = document.getElementById("region").value
-        if (selectedRegion.toLowerCase() == 'all') {
-            let regionCountries = JSON.parse(JSON.stringify(countriesList))
-            setFilterData(regionCountries)
-            return
-        }
         let regionCountries = JSON.parse(JSON.stringify(countriesList))
         regionCountries = regionCountries.filter((country) => {
             return country.region.toLowerCase() == selectedRegion.toLowerCase()
@@ -117,18 +105,15 @@ let StyleStateContext = (props) => {
         let copyOfFilterData = JSON.parse(JSON.stringify(filterListData))
 
         if (event.target.value.toLowerCase() == "sortpopulationbyassending") {
-            console.log("sortpopulationbyassending")
             let sortedData = copyOfFilterData.sort((country1, country2) => {
                 console.log(country2.population - country1.population)
                 return country1.population - country2.population
             })
             setFilterData(sortedData)
         } else {
-            console.log("sortpopulationbydessending")
             let sortedData = copyOfFilterData.sort((country1, country2) => {
                 return country2.population - country1.population
             })
-            console.log(filterListData.sort((country1, country2) => country1.population - country2.population))
             setFilterData(sortedData)
         }
     }
@@ -152,11 +137,11 @@ let StyleStateContext = (props) => {
     }
     console.log(props, "props")
     return (
-        <StyleContext.Provider value={{ style, updateStyle, regionList, filterListData, searchBySection, searchByInputValue, filterBySubregion, subRegion, sortByPopulation, sortByArea }}>
+        <MainContext.Provider value={{ style, updateStyle, regionList, filterListData, searchBySection, searchByInputValue, filterBySubregion, subRegion, sortByPopulation, sortByArea }}>
 
             {props.children}
-        </StyleContext.Provider>
+        </MainContext.Provider>
     )
 }
 
-export default StyleStateContext;
+export default MainStateContext;
