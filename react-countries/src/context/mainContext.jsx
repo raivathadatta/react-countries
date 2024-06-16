@@ -21,22 +21,16 @@ let darkModeStyle = {
 
 
 let MainStateContext = (props) => {
-  
 
-    
+
+
     let [filterListData, setFilterData] = useState([])//filter list//list paasing to htm to render     
-    let [countriesList, setCountriesList] = useState([])//country list 
-   
-    let [region, setRegion] = useState({})//region list
+    let [countryiesData, setCountriesList] = useState({countryiesList:[] , region:{}})//country list 
 
-    let regionList = Object.keys(region)
-
+    let regionList = Object.keys(countryiesData.region)
     let [subRegion, setSubRegion] = useState([])//subregion list
+
   
-   
-
-
-
     useEffect(() => {
 
         let fetchData = async () => {
@@ -51,23 +45,24 @@ let MainStateContext = (props) => {
 
             });
 
-            setRegion(regionData)
+            // setRegion(regionData)
             setFilterData(data)
-            setCountriesList(data)
+            setCountriesList({countryiesList:data,region:regionData})
         }
         fetchData()
     }, [])
 
+   
     let [style, setDark] = useState({ isDarkMode: false, backGroundStyle: lightModeStyle })
-    
-    let modeText = style.isDarkMode ?"light Mode":"Dark Mode"
+
+    let modeText = style.isDarkMode ? "light Mode" : "Dark Mode"
     let updateStyle = () => {
 
         if (style.isDarkMode) {
-             let darkMode = !style.isDarkMode
+            let darkMode = !style.isDarkMode
             setDark({ isDarkMode: darkMode, backGroundStyle: { ...lightModeStyle } })
         } else {
-             let darkMode = !style.isDarkMode
+            let darkMode = !style.isDarkMode
             setDark({ isDarkMode: darkMode, backGroundStyle: { ...darkModeStyle } })
 
         }
@@ -78,34 +73,38 @@ let MainStateContext = (props) => {
 
 
     let searchBySection = () => {
+
         let selectedRegion = document.getElementById("region").value
-        let regionCountries = JSON.parse(JSON.stringify(countriesList))
+        let regionCountries = JSON.parse(JSON.stringify(countryiesData.countryiesList))
         regionCountries = regionCountries.filter((country) => {
             return country.region.toLowerCase() == selectedRegion.toLowerCase()
         })
-        setSubRegion([...region[selectedRegion]])///adding sub region by data 
+        setSubRegion([...countryiesData.region[selectedRegion]])///adding sub region by data 
         setFilterData(regionCountries)/// adding filter data 
         // setSubRegionData(regionCountries)
 
     }
 
     let searchByInputValue = (event) => {
-        let copyOfCountryList = JSON.parse(JSON.stringify(countriesList))
+        let copyOfCountryList = JSON.parse(JSON.stringify(countryiesData.countryiesList))
         let selectedRegion = document.getElementById("region").value
         let regionCountries = selectedRegion.toLowerCase() == 'filterbyregion' ? copyOfCountryList : selectedRegion.toLowerCase() == 'all' ? copyOfCountryList : copyOfCountryList.filter((country) => country.region.toLowerCase() == selectedRegion.toLowerCase())
         let inputValue = event.target.value
         let inputCountries = regionCountries.filter((country) => country.name.common.toLowerCase().includes(inputValue.toLowerCase()))
+
         setFilterData(inputCountries)
+
     }
 
 
     let filterBySubregion = (event) => {
+        console.log("on filterBySubregion")
         let selectedRegion = document.getElementById("region").value
-        let selectedSubRegion =event.target.value
-        let copyOfCountryList = JSON.parse(JSON.stringify(countriesList))
+        let selectedSubRegion = event.target.value
+        let copyOfCountryList = JSON.parse(JSON.stringify(countryiesData.countryiesList))
+        console.log("copyOfCountryList " + copyOfCountryList)
 
-
-        let subRegionsData=    copyOfCountryList.filter((country) => {
+        let subRegionsData = copyOfCountryList.filter((country) => {
             return country.region.toLowerCase() == selectedRegion.toLowerCase() && country.subregion.toLowerCase() == selectedSubRegion.toLowerCase()
         })
         setFilterData(subRegionsData)
@@ -148,9 +147,10 @@ let MainStateContext = (props) => {
     }
     console.log(props, "props")
     return (
-        <MainContext.Provider value={{ style, updateStyle, modeText,regionList, filterListData, searchBySection, searchByInputValue, filterBySubregion, subRegion, sortByPopulation, sortByArea }}>
+        <MainContext.Provider value={{ style, updateStyle, modeText, regionList, filterListData, searchBySection, searchByInputValue, filterBySubregion, subRegion, sortByPopulation, sortByArea }}>
 
-            {countriesList.length ==0 ? <div id="loader"></div> : props.children}
+            {countryiesData.length == 0 ? <div id="loader"></div> : props.children}
+
         </MainContext.Provider>
     )
 }
