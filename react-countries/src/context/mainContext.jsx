@@ -23,15 +23,17 @@ let darkModeStyle = {
 let MainStateContext = (props) => {
   
 
+    
+    let [filterListData, setFilterData] = useState([])//filter list//list paasing to htm to render     
     let [countriesList, setCountriesList] = useState([])//country list 
-
-    let [filterListData, setFilterData] = useState([])//filter list
-
+   
     let [region, setRegion] = useState({})//region list
 
-    let [subRegion, setSubRegion] = useState([])//subregion list
     let regionList = Object.keys(region)
-    let [subRegionData, setSubRegionData] = useState([])//subregion
+
+    let [subRegion, setSubRegion] = useState([])//subregion list
+  
+   
 
 
 
@@ -48,6 +50,7 @@ let MainStateContext = (props) => {
                 regionData[country.region].add(country.subregion)
 
             });
+
             setRegion(regionData)
             setFilterData(data)
             setCountriesList(data)
@@ -82,7 +85,7 @@ let MainStateContext = (props) => {
         })
         setSubRegion([...region[selectedRegion]])///adding sub region by data 
         setFilterData(regionCountries)/// adding filter data 
-        setSubRegionData(regionCountries)
+        // setSubRegionData(regionCountries)
 
     }
 
@@ -97,9 +100,15 @@ let MainStateContext = (props) => {
 
 
     let filterBySubregion = (event) => {
-        let copyOfFilterData = JSON.parse(JSON.stringify(subRegionData))
-        let subRegionCounties = copyOfFilterData.filter((country) => country.subregion.toLowerCase() == event.target.value.toLowerCase())
-        setFilterData(subRegionCounties)
+        let selectedRegion = document.getElementById("region").value
+        let selectedSubRegion =event.target.value
+        let copyOfCountryList = JSON.parse(JSON.stringify(countriesList))
+
+
+        let subRegionsData=    copyOfCountryList.filter((country) => {
+            return country.region.toLowerCase() == selectedRegion.toLowerCase() && country.subregion.toLowerCase() == selectedSubRegion.toLowerCase()
+        })
+        setFilterData(subRegionsData)
     }
 
     let sortByPopulation = (event) => {
