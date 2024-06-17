@@ -18,7 +18,7 @@ function SearchBar() {
              
             </select>
             <select name="searachBySubRegion"  onChange={filterBySubregion} className={searchStyle.filterStyle} id = "subregion">
-                <option hidden value="filterbyregion" >Filter by sub-region</option>
+                <option hidden value="filterbysubregion" >Filter by sub-region</option>
                 {subRegion.map((subRegionCountry)=>
                      <option key={subRegionCountry} value={subRegionCountry.toLowerCase()}>{subRegionCountry}</option>
                 )}

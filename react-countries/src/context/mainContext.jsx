@@ -37,6 +37,7 @@ let MainStateContext = (props) => {
             let regionData = {}
             let result = await fetch("https://restcountries.com/v3.1/all")
             let data = await result.json()
+
             data.forEach(country => {
                 if (!regionData[country.region]) {
                     regionData[country.region] = new Set()
@@ -45,7 +46,6 @@ let MainStateContext = (props) => {
 
             });
 
-            // setRegion(regionData)
             setFilterData(data)
             setCountriesList({countryiesList:data,region:regionData})
         }
@@ -56,6 +56,7 @@ let MainStateContext = (props) => {
     let [style, setDark] = useState({ isDarkMode: false, backGroundStyle: lightModeStyle })
 
     let modeText = style.isDarkMode ? "light Mode" : "Dark Mode"
+    
     let updateStyle = () => {
 
         if (style.isDarkMode) {
@@ -64,9 +65,7 @@ let MainStateContext = (props) => {
         } else {
             let darkMode = !style.isDarkMode
             setDark({ isDarkMode: darkMode, backGroundStyle: { ...darkModeStyle } })
-
         }
-
     }
 
 
@@ -76,41 +75,49 @@ let MainStateContext = (props) => {
 
         let selectedRegion = document.getElementById("region").value
         let regionCountries = JSON.parse(JSON.stringify(countryiesData.countryiesList))
+
         regionCountries = regionCountries.filter((country) => {
             return country.region.toLowerCase() == selectedRegion.toLowerCase()
         })
+
         setSubRegion([...countryiesData.region[selectedRegion]])///adding sub region by data 
         setFilterData(regionCountries)/// adding filter data 
-        // setSubRegionData(regionCountries)
-
     }
 
     let searchByInputValue = (event) => {
+
         let copyOfCountryList = JSON.parse(JSON.stringify(countryiesData.countryiesList))
         let selectedRegion = document.getElementById("region").value
+        let subRegionValue = document.getElementById("subregion").value
         let regionCountries = selectedRegion.toLowerCase() == 'filterbyregion' ? copyOfCountryList : selectedRegion.toLowerCase() == 'all' ? copyOfCountryList : copyOfCountryList.filter((country) => country.region.toLowerCase() == selectedRegion.toLowerCase())
         let inputValue = event.target.value
-        let inputCountries = regionCountries.filter((country) => country.name.common.toLowerCase().includes(inputValue.toLowerCase()))
-
+        if(subRegionValue != 'filterbysubregion'){      
+        let subRegionCountries = regionCountries.filter((country) => country.subregion.toLowerCase() == subRegionValue.toLowerCase())
+        let inputCountries = subRegionCountries.filter((country) => country.name.common.toLowerCase().includes(inputValue.toLowerCase()))
         setFilterData(inputCountries)
-
+        }else{
+            let inputCountries = regionCountries.filter((country) => country.name.common.toLowerCase().includes(inputValue.toLowerCase()))
+            setFilterData(inputCountries)
+        }
     }
 
 
     let filterBySubregion = (event) => {
+
         console.log("on filterBySubregion")
         let selectedRegion = document.getElementById("region").value
         let selectedSubRegion = event.target.value
         let copyOfCountryList = JSON.parse(JSON.stringify(countryiesData.countryiesList))
-        console.log("copyOfCountryList " + copyOfCountryList)
 
         let subRegionsData = copyOfCountryList.filter((country) => {
             return country.region.toLowerCase() == selectedRegion.toLowerCase() && country.subregion.toLowerCase() == selectedSubRegion.toLowerCase()
         })
+
         setFilterData(subRegionsData)
     }
 
     let sortByPopulation = (event) => {
+
         console.log("on sortByPopulation")
         let copyOfFilterData = JSON.parse(JSON.stringify(filterListData))
 
@@ -132,9 +139,12 @@ let MainStateContext = (props) => {
 
         console.log(event.target.value)
         if (event.target.value == 'sortByAreaAsd') {
+
             let copyFilterData = JSON.parse(JSON.stringify(filterListData))
+
             let sortedData = copyFilterData.sort((country1, country2) =>
                 country1.area - country2.area)
+            
             setFilterData(sortedData)
         }
         else {
